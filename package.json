@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --progress --config webpack.config.build.js",
-    "development": "webpack server --progress --config webpack.config.development.js",
-    "start": "npm run development"
+    "be:development": "nodemon app.js",
+    "be:build": "node app.js",
+    "fe:build": "webpack --progress --config webpack.config.build.js",
+    "fe:development": "webpack server --progress --config webpack.config.development.js",
+    "start": "concurrently --kill-others \"npm run fe:development\" \"npm run be:development\" "
   },
   "author": "Tiamiyu Abidemi",
   "license": "ISC",
@@ -30,6 +32,7 @@
     "imagemin-optipng": "^8.0.0",
     "imagemin-svgo": "^10.0.1",
     "mini-css-extract-plugin": "^2.6.1",
+    "nodemon": "^2.0.20",
     "postcss-loader": "^7.0.1",
     "raw-loader": "^4.0.2",
     "sass": "^1.55.0",
@@ -38,5 +41,15 @@
     "webpack-cli": "^4.10.0",
     "webpack-dev-server": "^4.11.1",
     "webpack-merge": "^5.8.0"
+  },
+  "dependencies": {
+    "@prismicio/client": "^6.7.1",
+    "@prismicio/helpers": "^2.3.5",
+    "concurrently": "^7.5.0",
+    "dotenv": "^16.0.3",
+    "esm": "^3.2.25",
+    "express": "^4.18.2",
+    "node-fetch": "^2.6.1",
+    "pug": "^3.0.2"
   }
 }
