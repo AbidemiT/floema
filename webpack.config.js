@@ -54,7 +54,7 @@ module.exports = {
         }),
 
         new ImageMinimizerPlugin({
-            minimizer: {
+            minimizerOptions: {
                 implementation: ImageMinimizerPlugin.imageminMinify,
                 // Lossless optimization with custom option
                 // Feel free to experiment with options for better result for you
