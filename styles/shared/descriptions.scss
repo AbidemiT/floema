@@ -10,6 +10,10 @@
 %description-14 {
     font-family: $font-suisse-bp;
     font-size: 1.4rem;
+
+    @include media('<phone') {
+        font-size: 3rem;
+    }
 }
 
 %description-16 {
