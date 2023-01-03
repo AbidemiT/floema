@@ -134,6 +134,7 @@ app.get('/collections', async (req, res) => {
 
   const api = await initApi(req);
   const defaults = await handleRequest(api);
+  console.log({collections: defaults.collections});
 
   res.render('pages/collections', {
     ...defaults,
