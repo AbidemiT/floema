@@ -4,6 +4,8 @@ const webpack = require('webpack')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const ImageMinimizerPlugin = require("image-minimizer-webpack-plugin");
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'dev'
 
@@ -54,7 +56,7 @@ module.exports = {
         }),
 
         new ImageMinimizerPlugin({
-            minimizer: {
+            minimizerOptions: {
                 implementation: ImageMinimizerPlugin.imageminMinify,
                 // Lossless optimization with custom option
                 // Feel free to experiment with options for better result for you
@@ -67,6 +69,8 @@ module.exports = {
                 }
             },
         }),
+
+        new CleanWebpackPlugin(),
     ],
 
     module: {
@@ -94,18 +98,20 @@ module.exports = {
                         loader: 'postcss-loader',
                     },
                     {
-                        loader: 'sass-loader'
+                        loader: 'sass-loader',
+                        options: {
+                            // Prefer `dart-sass`
+                            implementation: require("sass"),
+                          },
                     }
                 ]
             },
             {
 
-                test: /\.(jpe?g|png|gif|svg|woff2?|fnt|webp)$/,
-                loader: 'file-loader',
-                options: {
-                    name(file) {
-                        return '[hash].[ext]'
-                    }
+                test: /\.(jpe?g|png|gif|svg|woff2?|fnt|webp|mp4)$/,
+                type: 'asset/resource',
+                generator: {
+                    filename: '[name].[hash].[ext]',
                 }
             },
             {
@@ -113,12 +119,6 @@ module.exports = {
                 use: [
                     {
                         loader: ImageMinimizerPlugin.loader,
-                        options: {
-                            severityError: "warning", // Ignore errors on corrupted images
-                            minimizerOptions: {
-                                plugins: ["gifsicle"],
-                            },
-                        },
                     },
                 ]
             },
@@ -133,5 +133,10 @@ module.exports = {
                 exclude: /node_modules/
             }
         ]
+    },
+
+    optimization: {
+        minimize: true,
+        minimizer: [new TerserPlugin()],
     }
 }
