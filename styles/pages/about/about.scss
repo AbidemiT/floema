@@ -1,9 +1,14 @@
 .about {
+    @extend %page;
+    
     background: $color-cadet-blue;
     color: $color-light-gray;
+    opacity: 0;
 }
 
-.about__wrapper {}
+.about__wrapper {
+
+}
 
 .about__title {
     @extend %title-100;
