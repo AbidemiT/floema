@@ -7,19 +7,32 @@ export default class Component extends EventEmitter {
         super();
 
         this.selector = element;
-        this.selectorChildren = { ...elements };
+        this.selectorChildren = { 
+            ...elements 
+        };
 
         this.create();
+
         this.addEventListener();
-        this.removeEventListener();
+
     }
 
     create() {
-        this.element = document.querySelector(this.selector);
+
+        if (this.selector instanceof window.HTMLElement) {
+            this.element = this.selector
+        } else {
+            this.element = document.querySelector(this.selector);
+        }
+
         this.elements = {};
 
         each(this.selectorChildren, (entry, key) => {
-            if (entry instanceof window.HTMLElement || entry instanceof window.NodeList || Array.isArray(entry)) {
+            if (
+                entry instanceof window.HTMLElement ||
+                entry instanceof window.NodeList ||
+                Array.isArray(entry)
+            ) {
                 this.elements[key] = entry;
             } else {
                 this.elements[key] = document.querySelectorAll(entry);
@@ -27,7 +40,7 @@ export default class Component extends EventEmitter {
                 if (this.elements[key].length === 0) {
                     this.elements[key] = null;
                 } else if (this.elements[key].length === 1) {
-                    this.elements[key] = entry;
+                    this.elements[key] = document.querySelector(entry);
                 }
             }
         });
@@ -38,6 +51,10 @@ export default class Component extends EventEmitter {
     }
 
     removeEventListener() {
+
+    }
+
+    onResize() {
 
     }
 }

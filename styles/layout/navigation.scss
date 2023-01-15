@@ -4,7 +4,7 @@
     pointer-events: none;
     position: fixed;
     z-index: z('navigation');
-    color: $color-quater-spanish-white;
+    color: $color-quarter-spanish-white;
 }
 
 .navigation__link {
@@ -12,9 +12,14 @@
     height: 2rem;
     left: 4rem;
     position: absolute;
+    transition: opacity .2s ease;
     top: 4rem;
     width: 12.8rem;
     pointer-events: auto;
+
+    &:hover {
+        opacity: 0.5;
+    }
 
     @include media('<phone') {
         height: 4.3rem;
@@ -38,6 +43,7 @@
 }
 
 .navigation__list__link {
+    @extend %link--hidden;
     @extend %title-20;
 
     display: block;
