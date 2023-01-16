@@ -2,7 +2,9 @@
     @extend %center;
     @extend %page;
 
-    height: auto;
+    @include media('<phone') {
+        height: auto;
+    }
     // background-color: $color-quicksand;
     // color: $color-white;
 }

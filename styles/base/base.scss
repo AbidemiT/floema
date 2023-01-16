@@ -28,6 +28,11 @@ body {
     position: fixed;
 }
 
+canvas {
+    pointer-events: none;
+    position: relative;
+}
+
 a {
     color: inherit;
     outline: none;
