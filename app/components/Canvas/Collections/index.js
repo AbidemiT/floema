@@ -1,169 +1,205 @@
-import { Plane, Transform } from "ogl";
+import { Plane, Transform } from 'ogl';
 import GSAP from 'gsap';
 import Prefix from 'prefix';
 
-import map from "lodash/map";
+import map from 'lodash/map';
 
-import Media from "./Media";
+import Media from './Media';
 
 export default class {
-    constructor({ gl, scene, sizes }) {
-        this.gl = gl;
-        this.scene = scene;
-        this.sizes = sizes;
+  constructor({ gl, scene, sizes, transition }) {
+    this.id = 'collections';
 
-        this.transformPrefix = Prefix('transform');
+    this.gl = gl;
+    this.scene = scene;
+    this.sizes = sizes;
+    this.transition = transition;
 
-        this.group = new Transform();
+    this.transformPrefix = Prefix('transform');
 
-        this.galleryElement = document.querySelector('.collections__gallery');
-        this.galleryWrapperElement = document.querySelector('.collections__gallery__wrapper');
+    this.group = new Transform();
 
-        this.titlesElement = document.querySelector('.collections__titles');
+    this.galleryElement = document.querySelector('.collections__gallery');
+    this.galleryWrapperElement = document.querySelector( '.collections__gallery__wrapper' ); // prettier-ignore
 
-        this.collectionsElements = document.querySelectorAll('.collections__article');
-        this.collectionsElementsActive = 'collections__article--active';
+    this.titlesElement = document.querySelector('.collections__titles');
 
-        this.mediasElements = document.querySelectorAll('.collections__gallery__media');
+    this.collectionsElements = document.querySelectorAll( '.collections__article' ); // prettier-ignore
+    this.collectionsElementsActive = 'collections__article--active';
 
+    this.mediasElements = document.querySelectorAll( '.collections__gallery__media' ); // prettier-ignore
 
-        this.scroll = {
-            current: 0,
-            target: 0,
-            start: 0,
-            lerp: 0.1,
-            velocity: 1
+    this.scroll = {
+      current: 0,
+      start: 0,
+      target: 0,
+      lerp: 0.1,
+      velocity: 1,
+    };
+
+    this.createGeometry();
+    this.createGallery();
+
+    this.onResize({
+      sizes: this.sizes,
+    });
+
+    this.group.setParent(this.scene);
+
+    this.show();
+  }
+
+  createGeometry() {
+    this.geometry = new Plane(this.gl);
+  }
+
+  createGallery() {
+    this.medias = map(this.mediasElements, (element, index) => {
+      return new Media({
+        element,
+        geometry: this.geometry,
+        index,
+        gl: this.gl,
+        scene: this.group,
+        sizes: this.sizes,
+      });
+    });
+  }
+
+  /**
+   * Animations.
+   */
+  async show() {
+    if (this.transition) {
+      const { src } = this.transition.mesh.program.uniforms.tMap.value.image;
+      const texture = window.TEXTURES[src];
+      const media = this.medias.find((media) => media.texture === texture);
+      const scroll = -media.bounds.left - media.bounds.width / 2 + window.innerWidth / 2; // prettier-ignore
+
+      this.update();
+
+      this.transition.animate(
+        {
+          position: { x: 0, y: media.mesh.position.y, z: 0 },
+          rotation: media.mesh.rotation,
+          scale: media.mesh.scale,
+        },
+        (_) => {
+          media.opacity.multiplier = 1;
+
+          map(this.medias, (item) => {
+            if (media !== item) {
+              item.show();
+            }
+          });
+
+          this.scroll.current = this.scroll.target = this.scroll.start = this.scroll.last = scroll; // prettier-ignore
         }
-
-        this.createGeometry();
-        this.createGallery();
-
-        this.group.setParent(scene);
-
-        this.show();
+      );
+    } else {
+      map(this.medias, (media) => media.show());
     }
+  }
 
-    createGeometry() {
-        this.geometry = new Plane(this.gl);
-    }
+  hide() {
+    map(this.medias, (media) => media.hide());
+  }
 
-    createGallery() {
-        this.medias = map(this.mediasElements, (element, index) => {
-            return new Media({
-                gl: this.gl,
-                element,
-                index,
-                geometry: this.geometry,
-                scene: this.group,
-                sizes: this.sizes
-            })
-        })
-    }
+  /**
+   * Events.
+   */
+  onResize(event) {
+    this.sizes = event.sizes;
 
-    /** 
-     * Animations.
-    */
-    show() {
-        map(this.medias, media => media.show());
-    }
+    this.bounds = this.galleryWrapperElement.getBoundingClientRect();
 
-    hide() {
-        map(this.medias, media => media.hide());
-    }
+    this.scroll.last = this.scroll.target = 0;
 
-    /** 
-     * Events
-    */
-    onResize(event) {
-        this.sizes = event.sizes;
+    map(this.medias, (media) => media.onResize(event, this.scroll));
 
-        this.bounds = this.galleryWrapperElement.getBoundingClientRect();
+    this.scroll.limit = this.bounds.width - this.medias[0].element.clientWidth;
+  }
 
-        this.scroll.last = this.scroll.target = 0;
+  onTouchDown({ x, y }) {
+    this.scroll.last = this.scroll.current;
+  }
 
-        map(this.medias, (media) => media.onResize(event, this.scroll));
+  onTouchMove({ x, y }) {
+    const distance = x.start - x.end;
 
-        this.scroll.limit = this.bounds.width - this.medias[0].element.clientWidth;
-    }
+    this.scroll.target = this.scroll.last - distance;
+  }
 
+  onTouchUp({ x, y }) {}
 
-    onTouchDown({ x, y }) {
-        this.scroll.last = this.scroll.current
-    }
+  onWheel({ pixelY }) {
+    this.scroll.target += pixelY;
+  }
 
-    onTouchMove({ x, y }) {
-        const distance = x.start - x.end
+  /**
+   * Changed.
+   */
+  onChange(index) {
+    this.index = index;
 
-        this.scroll.target = this.scroll.last - distance
-    }
+    const selectedCollection = parseInt( this.mediasElements[this.index].getAttribute('data-index')); // prettier-ignore
 
-    onTouchUp({ x, y }) {
-
-    }
-
-    onWheel({ pixelY }) {
-        this.scroll.target += pixelY;
-    }
-
-    /** 
-     * Changed
-    */
-    onChange(index) {
-        this.index = index;
-    
-        const selectedCollection = parseInt( this.mediasElements[this.index].getAttribute('data-index'));
-
-        console.log({selectedCollection});
-    
-        map(this.collectionsElements, (element, elementIndex) => {
-          if (elementIndex === selectedCollection) {
-            element.classList.add(this.collectionsElementsActive);
-          } else {
-            element.classList.remove(this.collectionsElementsActive);
-          }
-        });
-    
-        this.titlesElement.style[this.transformPrefix] = `translateY(-${ 25 * selectedCollection }%) translate(-50%, -50%) rotate(-90deg)`;
+    map(this.collectionsElements, (element, elementIndex) => {
+      if (elementIndex === selectedCollection) {
+        element.classList.add(this.collectionsElementsActive);
+      } else {
+        element.classList.remove(this.collectionsElementsActive);
       }
+    });
 
-    /** 
-     * Update
-    */
-    update() {
-        if (!this.bounds) return
+    this.titlesElement.style[this.transformPrefix] = `translateY(-${ 25 * selectedCollection }%) translate(-50%, -50%) rotate(-90deg)`; // prettier-ignore
+  }
 
-        this.scroll.target = GSAP.utils.clamp(-this.scroll.limit, 0, this.scroll.target);
+  /**
+   * Update.
+   */
+  update() {
+    this.scroll.target = GSAP.utils.clamp(
+      -this.scroll.limit,
+      0,
+      this.scroll.target
+    );
 
-        this.scroll.current = GSAP.utils.interpolate(this.scroll.current, this.scroll.target, this.scroll.lerp);
+    this.scroll.current = GSAP.utils.interpolate(
+      this.scroll.current,
+      this.scroll.target,
+      this.scroll.lerp
+    );
 
-        this.galleryElement.style[this.transformPrefix] = `translateX(${this.scroll.current})px`
+    this.galleryElement.style[
+      this.transformPrefix
+    ] = `translateX(${this.scroll.current}px)`;
 
-        if (this.scroll.last < this.scroll.current) {
-            this.scroll.direction = 'right';
-        } else if (this.scroll.last > this.scroll.current) {
-            this.scroll.direction = 'left'
-        }
-
-
-        this.scroll.last = this.scroll.current
-
-        map(this.medias, (media, index) => {
-            media.update(this.scroll.current);
-        })
-
-        const index = Math.floor(Math.abs(this.scroll.current / this.scroll.limit) * this.medias.length);
-
-        if (this.index !== index) {
-
-            this.onChange(index)
-        }
+    if (this.scroll.last < this.scroll.current) {
+      this.scroll.direction = 'right';
+    } else if (this.scroll.last > this.scroll.current) {
+      this.scroll.direction = 'left';
     }
 
-    /** 
-     * Destroy
-    */
+    this.scroll.last = this.scroll.current;
 
-    destroy() {
-        this.scene.removeChild(this.group);
+    const index = Math.floor( Math.abs( (this.scroll.current - this.medias[0].bounds.width / 2) / this.scroll.limit ) * (this.medias.length - 1) ); // prettier-ignore
+
+    if (this.index !== index) {
+      this.onChange(index);
     }
+
+    map(this.medias, (media, index) => {
+      media.update(this.scroll.current, this.index);
+      media.mesh.rotation.z = Math.abs( GSAP.utils.mapRange(0, 1, -0.2, 0.2, index / (this.medias.length - 1)) ) - 0.1; // prettier-ignore
+
+      media.mesh.position.y += Math.cos((media.mesh.position.x / this.sizes.width) * Math.PI * 0.1) * 40 - 40; }); // prettier-ignore
+  }
+
+  /**
+   * Destroy.
+   */
+  destroy() {
+    this.scene.removeChild(this.group);
+  }
 }

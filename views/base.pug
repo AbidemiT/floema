@@ -39,4 +39,7 @@ body
     .content#content(data-template=template)
       block content
 
+    script.
+      window.ASSETS = !{JSON.stringify(assets).replace(/<\//g, "<\\/")}
+
     script(src="main.js") 

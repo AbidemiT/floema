@@ -18,9 +18,9 @@
  * @author: Jack Doyle, jack@greensock.com
 */
 
-/*! ../../../shaders/plane.fragment.glsl */
+/*! ../../../shaders/home-fragment.glsl */
 
-/*! ../../../shaders/plane.vertex.glsl */
+/*! ../../../shaders/home-vertex.glsl */
 
 /*! ../core/Geometry.js */
 
@@ -52,6 +52,8 @@
 
 /*! ./Collections */
 
+/*! ./Detail */
+
 /*! ./ExecutionEnvironment */
 
 /*! ./Gallery */
@@ -65,6 +67,8 @@
 /*! ./Media */
 
 /*! ./Transform.js */
+
+/*! ./Transition */
 
 /*! ./UserAgent_DEPRECATED */
 
@@ -276,12 +280,6 @@
 
 /*! ./clients/WebSocketClient.js */
 
-/*! ./components/Canvas */
-
-/*! ./components/Navigation */
-
-/*! ./components/Preloader */
-
 /*! ./createConsoleLogger */
 
 /*! ./emitter */
@@ -352,14 +350,6 @@
 
 /*! ./overlay.js */
 
-/*! ./pages/About */
-
-/*! ./pages/Collections */
-
-/*! ./pages/Detail */
-
-/*! ./pages/Home */
-
 /*! ./property */
 
 /*! ./socket.js */
@@ -404,7 +394,15 @@
 
 /*! classes/Component */
 
+/*! classes/Detection */
+
 /*! classes/Page */
+
+/*! components/Canvas */
+
+/*! components/Navigation */
+
+/*! components/Preloader */
 
 /*! events */
 
@@ -420,11 +418,23 @@
 
 /*! ogl */
 
+/*! pages/About */
+
+/*! pages/Collections */
+
+/*! pages/Detail */
+
+/*! pages/Home */
+
 /*! prefix */
 
-/*! shaders/plane.fragment.glsl */
+/*! shaders/collections-fragment.glsl */
 
-/*! shaders/plane.vertex.glsl */
+/*! shaders/collections-vertex.glsl */
+
+/*! shaders/plane-fragment.glsl */
+
+/*! shaders/plane-vertex.glsl */
 
 /*! tapable/lib/SyncBailHook */
 
@@ -489,6 +499,10 @@
   \**********************************/
 
 /*!**********************************!*\
+  !*** ./app/classes/Detection.js ***!
+  \**********************************/
+
+/*!**********************************!*\
   !*** ./app/pages/About/index.js ***!
   \**********************************/
 
@@ -545,6 +559,10 @@
   \**************************************/
 
 /*!**************************************!*\
+  !*** ./app/shaders/home-vertex.glsl ***!
+  \**************************************/
+
+/*!**************************************!*\
   !*** ./node_modules/lodash/_Hash.js ***!
   \**************************************/
 
@@ -561,7 +579,7 @@
   \**************************************/
 
 /*!***************************************!*\
-  !*** ./app/shaders/plane.vertex.glsl ***!
+  !*** ./app/shaders/plane-vertex.glsl ***!
   \***************************************/
 
 /*!***************************************!*\
@@ -586,6 +604,10 @@
 
 /*!****************************************!*\
   !*** ./app/pages/Collections/index.js ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./app/shaders/home-fragment.glsl ***!
   \****************************************/
 
 /*!****************************************!*\
@@ -617,7 +639,7 @@
   \****************************************/
 
 /*!*****************************************!*\
-  !*** ./app/shaders/plane.fragment.glsl ***!
+  !*** ./app/shaders/plane-fragment.glsl ***!
   \*****************************************/
 
 /*!*****************************************!*\
@@ -913,6 +935,14 @@
   \*********************************************/
 
 /*!*********************************************!*\
+  !*** ./app/components/Canvas/Transition.js ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./app/shaders/collections-vertex.glsl ***!
+  \*********************************************/
+
+/*!*********************************************!*\
   !*** ./node_modules/lodash/_arrayFilter.js ***!
   \*********************************************/
 
@@ -1047,6 +1077,14 @@
 /*!**********************************************!*\
   !*** ./node_modules/ogl/src/extras/Plane.js ***!
   \**********************************************/
+
+/*!***********************************************!*\
+  !*** ./app/components/Canvas/Detail/index.js ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./app/shaders/collections-fragment.glsl ***!
+  \***********************************************/
 
 /*!***********************************************!*\
   !*** ./node_modules/lodash/_arrayLikeKeys.js ***!

@@ -1,8 +1,8 @@
 import GSAP from 'gsap';
-import { Texture, Mesh, Program } from 'ogl';
+import { Mesh, Program } from 'ogl';
 
-import fragment from 'shaders/plane.fragment.glsl';
-import vertex from 'shaders/plane.vertex.glsl';
+import fragment from 'shaders/plane-fragment.glsl';
+import vertex from 'shaders/plane-vertex.glsl';
 
 export default class {
     constructor({ gl, element, index, geometry, scene, sizes }) {
@@ -25,14 +25,11 @@ export default class {
     }
 
     createTexture() {
-        this.texture = new Texture(this.gl);
+        const image = this.element.querySelector('img');
 
-        const img = this.element.querySelector('img');
+        this.texture = window.TEXTURES[image.getAttribute('data-src')];
 
-        this.image = new Image();
-        this.image.crossOrigin = 'anonymous';
-        this.image.src = img.getAttribute('data-src');
-        this.image.onload = _ => (this.texture.image = this.image);
+        console.log({texture: this.texture});
     }
 
     createProgram() {
@@ -40,7 +37,7 @@ export default class {
             fragment,
             vertex,
             uniforms: {
-                uAlpha: {value: 0},
+                uAlpha: { value: 0 },
                 tMap: { value: this.texture },
             }
         });
