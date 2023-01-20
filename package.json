@@ -7,7 +7,8 @@
     "be:development": "nodemon app.js",
     "fe:build": "webpack --progress --config webpack.config.build.js",
     "fe:development": "webpack serve --progress --config webpack.config.development.js",
-    "start": "concurrently --kill-others \"npm run be:development\" \"npm run fe:development\""
+    "start": "concurrently --kill-others \"npm run be:development\" \"npm run fe:development\"",
+    "build": "concurrently --kill-others \"npm run be:build\" \"npm run fe:build\""
   },
   "repository": {
     "type": "git",
