@@ -1,9 +1,0 @@
-/*! ../node_modules/mini-css-extract-plugin/dist/hmr/hotModuleReplacement.js */
-
-/*!**********************!*\
-  !*** ./app/index.js ***!
-  \**********************/
-
-/*!***************************!*\
-  !*** ./styles/index.scss ***!
-  \***************************/

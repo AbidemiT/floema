@@ -1,10 +1,12 @@
 .detail {
-    @extend %cover;
     @extend %center;
+    @extend %page;
 
-    height: auto;
-    background-color: $color-quicksand;
-    color: $color-white;
+    @include media('<phone') {
+        height: auto;
+    }
+    // background-color: $color-quicksand;
+    // color: $color-white;
 }
 
 .detail__wrapper {
