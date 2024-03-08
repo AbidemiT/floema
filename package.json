@@ -12,13 +12,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/whizzbbig/Webpack-boilerplate.git"
+    "url": "git+https://github.com/AbidemiT/floema.git"
   },
   "keywords": [],
-  "author": "whizzbbig",
+  "author": "abidemi",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/whizzbbig/Webpack-boilerplate/issues"
+    "url": "https://github.com/AbidemiT/floema/issues"
   },
   "homepage": "https://github.com/whizzbbig/Webpack-boilerplate#readme",
   "devDependencies": {
